@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品详情页-乐购</title>
+    <link rel="icon" href="/css/img/icon.ico"/>
+    <link rel="stylesheet" href="/css/front/details.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/common/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/back/user/userCommon.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/back/user/initShopCart.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/front/product-introduce.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/front/detail-panel.css" type="text/css"/>
+    <script type="text/javascript" src="/js/common/jquery-3.1.1.min.js"></script>
+    <!--<script type="text/javascript" src="/js/zepto.min.js"></script>-->
+    <script type="text/javascript" src="/js/common/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/front/details.js"></script>
+    <script type="text/javascript" src="/js/sys/sku_new.js"></script>
+    <script type="text/javascript" src="/js/back/user/initShopCart.js"></script>
+    <meta name="Keywords" content="乐购全球购">
+    <script type="text/javascript">
+        $(function () {
+            var basePath = $("#basePath").val();
+
+            //将商品加入购物车
+            $(".add-cart").on("click", function () {
+                if ("${id}" == "") {
+                    var uri = window.location.pathname;
+                    var returnURL = uri.substring(uri.lastIndexOf("/"), uri.length);
+                    window.location.href = basePath + "/login.jsp?returnURL=/item/details" + returnURL;
+                }
+                var commodityId = $(this).parent().attr("data-commId");
+                var commodityNumber = $(".commodity-number").val();
+                $.ajax({
+                    url: basePath + "/cart/addCommodityAndNumber",
+                    type: "put",
+                    data: {"commodityId": commodityId, "commodityNumber": commodityNumber},
+                    success: function (data) {
+                        $(".modal-body").text("商品已成功加入购物车！");
+                        $("#btn-operate").text("去购物车查看");
+                        $("#btn-operate").off();
+                        $("#btn-operate").on("click", function () {
+                            window.open(basePath + "/user/cart");
+                        });
+                        $('#alertModal2').modal('show');
+                    }
+                })
+            });
+            /**
+             * 添加商品到收藏
+             */
+            /*$(".add-collecting").on("click", function () {
+                if ("${id}" == "") {
+                    var uri = window.location.pathname;
+                    var returnURL = uri.substring(uri.lastIndexOf("/"), uri.length);
+                    window.location.href = basePath + "/login.jsp?returnURL=/item/details" + returnURL;
+                }
+                var commodityId = $(this).parent().attr("data-commId");
+                $.ajax({
+                    url: basePath + "/collecting/addCollecting",
+                    type: "put",
+                    data: {"commodityId": commodityId},
+                    success: function (data) {
+                        if (data == "exist") {
+                            $(".modal-body").text("商品已经在收藏列表了！");
+                        } else if (data == "success") {
+                            $(".modal-body").text("商品已成功加入收藏！");
+                        }
+                        $("#btn-operate").hide();
+                        $('#alertModal').modal('show');
+                    }
+                })
+            });*/
+        })
+    </script>
+</head>
+<body>
+<input type="hidden" id="basePath" value="${pageContext.request.contextPath}">
+<div class="header">
+    <div class="header-top">
+        <div class="header-nav">
+            <div class="header-top-left">
+                <a href="javascript:;">手机乐购</a>
+            </div>
+            <div class="header-top-right">
+                <span style="margin-right: 40px">你好，欢迎来到乐购！</span>
+                <span th:if="${session.user == null}">
+							<a href="/user/login">登录</a>
+							<a href="/user/register">免费注册</a>
+						</span>
+                <span th:if="${session.user !=null}">
+							<a href="/user/infoManage" th:text="${session.user.nickName}"></a>
+							<a href="/user/logout" class="logout">退出</a>
+							<a href="/user/orders/1" target="_blank">我的订单</a>
+						</span>
+                <a href="#">帮助中心</a>
+            </div>
+        </div>
+    </div>
+    <div class="header-middle">
+        <div class="header-middle-logo">
+            <img src="/css/img/logo.png" width="100px" height="100px">
+        </div>
+        <div class="header-middle-ca">
+            <a href="/user/cart" target="_blank"
+               class="btn btn-danger btn-shopping-cart"
+            ><span value="${id}" style="margin-right: 10px" class="glyphicon glyphicon-shopping-cart"></span>购物车</a>
+            <!--<div class="p-shop-cart">
+                <div class="p-shop-cart-goods">
+                    <h4 style="margin-left: 20px">我的购物车商品</h4>
+                    <div class="p-list-goods">
+
+                    </div>
+                    <div class="p-total-price">
+
+                    </div>
+                    <div class="p-go-shopcart">
+                        <a href="/user/cart" target="_blank">去购物车查看</a>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+        <div class="header-middle-se">
+            <input type="text" name="condition" class="search" placeholder="商品/种类"/>
+            <button class="btn btn-info btn-search"><span class="glyphicon glyphicon-search"></span> 搜索</button>
+        </div>
+        <div class="header-middle-hot">
+            <p><a href="">尤妮佳丨</a><a href="">牙胶丨</a><a href="">收纳柜丨</a><a href="">隔尿垫丨</a><a href="">加州宝宝</a></p>
+        </div>
+    </div>
+    <div class="header-foot">
+        <div class="header-foot-r">
+            <a target="_blank" href="/portal/index" class="header-foot-r1">首页</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=运动"
+               class="header-foot-r1">运动户外</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=饮料"
+               class="header-foot-r1">饮料冲调</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=食品"
+               class="header-foot-r1">食品小吃</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=家电"
+               class="header-foot-r1">家电大全</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=数码"
+               class="header-foot-r1">数码产品</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=珠宝"
+               class="header-foot-r1">珠宝首饰</a>
+            <a target="_blank" href="#" class="header-foot-r1">帮助中心</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="show">
+
+        <div id="detail-product">
+            <div class="tb-detail-bd tb-clear">
+                <div class="tb-summery">
+                    <div class="tb-item-info">
+                        <div class="tb-item-info-left">
+                            <div class="tb-item-gallery">
+                                <div class="tb-main-pic tb-pic">
+                                    <a herf="" target="_blank">
+                                        <img th:src="${productDetails.productMediaList[0].mediaLocation}" src="https://gd2.alicdn.com/imgextra/i2/3154470202/O1CN01mrNZ0h1DMYVdzEofs_!!3154470202.jpg_400x400.jpg"/>
+                                    </a>
+                                </div>
+                                <!--<ul class="tb-thumb tb-clearfix">
+                                    <li>
+                                        <div class="tb-pic tb-s50">
+                                            <a herf="#">
+                                                <img src="https://gd4.alicdn.com/imgextra/i1/3154470202/O1CN013jJD9b1DMYVcaliMq_!!3154470202.jpg_50x50.jpg">
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="tb-pic tb-s50">
+                                            <a herf="#">
+                                                <img src="https://gd4.alicdn.com/imgextra/i1/3154470202/O1CN013jJD9b1DMYVcaliMq_!!3154470202.jpg_50x50.jpg">
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>-->
+                            </div>
+                        </div>
+                        <!-- 右边 -->
+                        <div class="tb-item-info-right">
+                            <div class="tb-property tb-property-x">
+                                <div class="tb-wrap tb-wrap-newshop">
+                                    <div class="tb-title">
+                                        <h3 class="tb-main-title" th:text="${productDetails.description}">
+                                            2019秋冬大码女装春装新款连衣裙百搭打底衫女长袖雪纺衬衫t恤女
+                                        </h3>
+                                    </div>
+                                    <ul class="tb-meta tb-promo-meta">
+                                        <li class="tb-price-panel">
+                                            <span class="tb-property-type">价格</span>
+                                            <div class="tb-property-content">
+                                                <strong class="tb-promo-price">
+                                                    <em class="tb-price-rmb">￥</em>
+                                                    <em class="tb-price-rmb-num" th:text="${productDetails.priceListId}">79</em>
+                                                </strong>
+                                            </div>
+                                        </li>
+                                        <li class="tb-sale-panel">
+                                            <span class="tb-property-type">销量</span>
+                                            <em class="tb-sale-num">43</em>
+                                            <em>件</em>
+                                        </li>
+                                    </ul>
+                                    <div id="J_SepLine" class="sep-line"></div>
+                                    <div id="J_isku" class="tb-key tb-key-sku">
+                                        <div class="tb-skin">
+                                            <div class="tb-sku-prop">
+                                                <!--<dl class="J_Prop J_TMySizeProp tb-prop tb-clear J_Prop_measurement ">
+                                                    <dt class="tb-property-type">尺码</dt>
+                                                    <dd>
+                                                        <ul class="J_TSaleProp tb-clearfix">
+                                                            <li>
+                                                                <a>
+                                                                    <span>XL(建议105~120斤)</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a>
+                                                                    <span>XL(建议105~120斤)</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a>
+                                                                    <span>XL(建议105~120斤)</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </dd>
+                                                </dl>
+                                                <dl class="J_Prop tb-prop tb-clear J_Prop_Color ">
+                                                    <dt class="tb-property-type">颜色分类</dt>
+                                                    <dd>
+                                                        <ul data-property="颜色分类" class="J_TSaleProp tb-img tb-clearfix">
+                                                            <li>
+                                                                <a herf="javascript:;"
+                                                                   style="background:url(https://gd2.alicdn.com/imgextra/i1/3154470202/O1CN013jJD9b1DMYVcaliMq_!!3154470202.jpg_30x30.jpg) center no-repeat;">
+                                                                </a>
+                                                                <span>黑色</span>
+                                                            </li>
+                                                        </ul>
+                                                    </dd>
+                                                </dl>-->
+                                                <span id="sku_id" style="display: none"></span>
+                                                <input id="confirm_id" style="display: none" value/>
+                                            </div>
+                                            <dl class="tb-amount tb-clear">
+                                                <dt class="tb-property-type">数量</dt>
+                                                <dd>
+                      <span class="tb-stock">
+                        <a herf="javascript:void(0);" class="tb-reduce J_Reduce tb-iconfont tb-disable-reduce">-</a>
+                        <input id="J_IptAmount" type="text" class="tb-text" value="1" maxlength="8" title="请输入购买量"/>
+                        <a class="tb-increase J_Increase tb-iconfont" herf="javascript:void(0);">+</a>
+                        件
+                        <em>(库存<span class="tb-count">900</span>件)</em>
+                      </span>
+                                                </dd>
+                                            </dl>
+                                            <div class="tb-action tb-clearfix ">
+                                                <div class="tb-btn-buy">
+                                                    <a herf="" class="J_LinkBuy" title="点击此按钮，到下一步确认购买信息">立即购买</a>
+                                                </div>
+                                                <div class="tb-btn-add">
+                                                    <a herf="" class="J_LinkAdd" title="加入购物车">
+                                                        <i class=" glyphicon-shopping-cart"></i>加入购物车</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="introduction">
+        <div class="intro-tite">
+            <a href="javascript:void(0)" class="i1">商品详情</a>
+            <a href="javascript:void(0)" id="i2">商品评价</a>
+        </div>
+        <div class="left">
+            <div id="attributes" class="attributes">
+                <div class="attributes-list" id="J_AttrList">
+                    <ul>
+                        <li th:each="propName:${productDetails.propNameList}" th:title="${propName.propName}">
+                            <span th:text="|${propName.propName}: |"></span>
+                            <span th:each="propV:${propName.propValueList}" th:text="|${propV.propValue} |">123</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--<div class="intro-text">
+                <div class="intro-details">
+                    <div class="intro-details-left">
+                    <span>商品名称：</span>${commodity.name}<br>
+                        <span>分类：</span>${commodity.kind.name}- ${commodity.smallKind.name}
+                    </div>
+                    <div class="intro-details-right">
+                        <span>品牌：</span><br>
+                        <span>产地：</span>中国
+                    </div>
+
+                </div>
+                <div class="intro-img">
+                    <img src="${pageContext.request.contextPath}/upload/${commodity.descPicture1}" width="100%" height="100%">
+                    <c:if test="${commodity.descPicture2 !=null}">
+                        <img src="${pageContext.request.contextPath}/upload/${commodity.descPicture2}" width="100%" height="100%">
+                    </c:if>
+                    <c:if test="${commodity.descPicture3 !=null}">
+                        <img src="${pageContext.request.contextPath}/upload/${commodity.descPicture3}" width="100%" height="100%">
+                    </c:if>
+                    <c:if test="${commodity.descPicture4 !=null}">
+                        <img src="${pageContext.request.contextPath}/upload/${commodity.descPicture4}" width="100%" height="100%">
+                    </c:if>
+                </div>
+            </div>-->
+        </div>
+
+        <div class="right">
+            <div class="grade">
+                <!--<div class="g-xing">
+                    <span>好评度</span><span id="g1">${commodity.goodRatio}%</span>
+                    <span>好评(${commodity.totalGood})</span>
+                    <span>中评(${commodity.totalNormal})</span>
+                    <span>差评(${commodity.totalBad})</span>
+                </div>-->
+                    <div class="noComment" th:if="${productDetails.evaluateVoList.size() == 0}" th:text="该商品暂无评价">
+                        该商品暂无评价
+                    </div>
+                    <div class="g-text" th:each="item:${productDetails.evaluateVoList}">
+                        <p><span class="g2" th:text="${item.nickName}">${item.user.username}</span>
+                        <p th:text="${item.content}">${item.content}</p>
+                        <p>
+                                <a href="javascript:void(0)" th:if="${item.pictureLocations !=null || !item.pictureLocation1s.equals('')}" th:each="picture:${item.pictureLocations.split('@')}">
+                                    <img class="g4" th:src="@{'/img/upload/comment/'+${picture}}" src="${pageContext.request.contextPath}/upload/${item.picture1}"
+                                         width="48px" height="48px">
+                                </a>
+                            <!--<c:if test="${item.picture2 != null && !item.picture2.trim().equals('')}">
+                                <a href="javascript:void(0)">
+                                    <img class="g4" src="${pageContext.request.contextPath}/upload/${item.picture2}"
+                                         width="48px" height="48px">
+                                </a>
+                            </c:if>
+                            <c:if test="${item.picture3 != null && !item.picture3.trim().equals('')}">
+                                <a href="javascript:void(0)">
+                                    <img class="g4" src="${pageContext.request.contextPath}/upload/${item.picture3}"
+                                         width="48px" height="48px">
+                                </a>
+                            </c:if>
+                            <c:if test="${item.picture4 != null && !item.picture4.trim().equals('')}">
+                                <a href="javascript:void(0)">
+                                    <img class="g4" src="${pageContext.request.contextPath}/upload/${item.picture4}"
+                                         width="48px" height="48px">
+                                </a>
+                            </c:if>-->
+                        </p>
+                        <p class="g5">
+                            <a href="javascript:void(0)"><img src="" width="360px" height="200px"></a>
+                        </p>
+                        <p class="g6" th:text="${item.createTime}">${item.createTime}</p>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    <div class="footer-service">
+        <div class="service">
+            <h5 class="service1"></h5>
+            <span class="service-t">品类齐全，轻松购物</span>
+        </div>
+        <div class="service">
+            <h5 class="service2"></h5>
+            <span class="service-t">多仓直发，急速配送</span>
+        </div>
+        <div class="service">
+            <h5 class="service3"></h5>
+            <span class="service-t">正品行货，精致服务</span>
+        </div>
+        <div class="service">
+            <h5 class="service4"></h5>
+            <span class="service-t">天天低价，畅选无忧</span>
+        </div>
+    </div>
+    <div class="footer-help">
+        <ul class="help">
+            <li class="strong">使用帮助</li>
+            <li><a href="#" rel="nofollow">新手帮助</a></li>
+            <li><a href="#" rel="nofollow">乐豆体系</a></li>
+            <li><a href="#" rel="nofollow">正品承诺</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">支付方式</li>
+            <li><a href="#" rel="nofollow">支付方式</a></li>
+            <li><a href="#" rel="nofollow">支付流程</a></li>
+            <li><a href="#" rel="nofollow">跨境进口税</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">配送方式</li>
+            <li><a href="#" rel="nofollow">包邮政策</a></li>
+            <li><a href="#" rel="nofollow">发货时间</a></li>
+            <li><a href="#" rel="nofollow">配送区域</a></li>
+            <li><a href="#" rel="nofollow">送货验收</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">售后服务</li>
+            <li><a href="#" rel="nofollow">退货政策</a></li>
+            <li><a href="#" rel="nofollow">退货流程</a></li>
+            <li><a href="#" rel="nofollow">退款方式</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">联系方式</li>
+            <li><a href="#" rel="nofollow">总裁邮箱：ceo@lego.com</a></li>
+            <li><a href="#" rel="nofollow">商务合作：bd@lego.com</a></li>
+            <li><a href="#" rel="nofollow">媒体合作：pr@lego.com</a></li>
+            <li><a href="#" rel="nofollow">招商中心：zhaoshang@lego.com</a></li>
+        </ul>
+    </div>
+    <div class="footer-link">
+        <a href="javascript:;">关于乐购</a>丨<a href="javascript:;">加入乐购</a>丨<a href="javascript:;">商务合作</a>丨
+        <a href="javascript:;">帮助中心</a>丨<a href="javascript:;">联系我们</a>丨<a href="javascript:;">友情链接</a>丨
+        <a href="javascript:;">触屏版</a>丨<a href="javascript:;">媒体报道</a><br/>
+        <span class="footer-w">京公网安备：11010502027270 </span>|<span class="footer-w">营业执照：91110105582599307U</span>|
+        <span class="footer-w">食品经营许可证：SP1101051410296669 </span>|<span class="footer-w">出版物经营许可证：新出发京零字第朝160088号</span>|
+        <span class="footer-w">京ICP证140430号 </span><br/>
+        <span class="footer-w">京ICP备14006215号</span>|<span
+            class="footer-w">员工舞弊举报：jiancha@lego.com 电话：010-56733666</span><br/>
+        <span class="footer-w">通过本网站直接或者间接地推销商品或者服务的商业宣传活动均属“广告”</span><br/>
+        <span class="footer-w">Copyright &copy 2017 北京乐购在线商贸有限公司 Lego.com 保留一切权利</span>
+    </div>
+</div>
+<div class="modal fade" id="alertModal">
+    <div class="modal-dialog" style="margin-top:350px;width: 400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;font-size: 18px;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-dismiss" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="alertModal2">
+    <div class="modal-dialog" style="margin-top:350px;width: 400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <h4 class="modal-title" id="myModalLabel2">提示</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;font-size: 18px;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="btn-dismiss2" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btn-operate" data-dismiss="modal"></button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+</html>

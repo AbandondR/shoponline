@@ -1,0 +1,79 @@
+.clearfix:after {
+    clear: both;
+}
+.clearfix:before, .clearfix:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+.clearfix {
+    zoom: 1;
+}
+div, span, input, label, select{
+    margin:0px;
+    padding:0px;
+}
+.root-panel {
+    width:1050px;
+
+}
+.contianer-middle{
+    width:450px;
+    height:auto;
+    margin-right: 15px;
+    float:left;
+}
+.container-right{
+    width:350px;
+    height:auto;
+    float:left;
+}
+.container-left{
+    width:200px;
+    height:auto;
+    margin-right: 15px;
+    float:left;
+}
+.panel {
+    border:1px dotted blue;
+    padding-left:5px;
+    margin-bottom:10px;
+}
+.yjh-title{
+    width:120px;
+    font-weight:bold;
+}
+.text{
+    width:80px;
+}
+.content{
+    padding-left:10px;
+}
+.prop-cell{
+    width:430px;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+.prop-name-text{
+    float:left;
+}
+.prop-value-text{
+    float:left;
+    width:330px;
+}
+.text span{
+    text-align:right;
+    display:block;
+    padding-right:0px;
+}
+.sale-prop-cell{
+    margin-left:10px;
+    float:left;
+}
+.textarea-description{
+    width:300px;
+    height:100px;
+}
+.yjh-required{
+    border:1px solid red;
+}

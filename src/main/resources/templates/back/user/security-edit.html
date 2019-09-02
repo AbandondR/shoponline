@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心-我的资料-乐购</title>
+    <link rel="icon" href="/css/img/icon.ico"/>
+    <link rel="stylesheet" href="/css/back/user/modify.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/common/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/common/bootstrap-datepicker3.css">
+    <link rel="stylesheet" href="/skins/flat/red.css">
+    <link rel="stylesheet" href="/css/back/user/userCommon.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/back/user/initShopCart.css" type="text/css"/>
+    <script type="text/javascript" src="/js/common/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/common/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/common/icheck.min.js"></script>
+    <script src="/js/common/bootstrap-datepicker.js"></script>
+    <script src="/js/common/bootstrap-datepicker.zh-CN.js"></script>
+   <!-- <script type="text/javascript" src="/js/back/user/modify.js"></script>-->
+    <script type="text/javascript" src="/js/back/user/initShopCart.js"></script>
+    <meta name="Keywords" content="乐购全球购">
+    <script type="text/javascript">
+        $(function () {
+            var email = $("#security-email").attr("data-email");
+            $("#security-email #active").on("click", function(){
+                $.ajax({
+                    url: "/user/security/email/reactive?email=" + email,
+                    type: "get",
+                    success: function (data) {
+                        if (data === 'success') {
+                            $(this).attr("disabled", true);
+                            $(".modal-body").text("已发送激活邮件!!!");
+                            $('#alertModal').modal('show');
+                            return;
+                        }
+
+
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+<input type="hidden" id="basePath" value="${pageContext.request.contextPath}">
+<div class="header">
+    <div class="header-top">
+        <div class="header-nav">
+            <div class="header-top-left">
+                <a href="javascript:;">手机乐购</a>
+            </div>
+            <div class="header-top-right">
+                <span style="margin-right: 40px">你好，欢迎来到乐购！</span>
+                <span th:if="${session.user == null}">
+							<a th:href="@{/user/login}">登录</a>
+							<a th:href="@{/user/register}">免费注册</a>
+						</span>
+                <span th:if="${session.user !=null}">
+							<a href="/user/infoManage" th:text="${session.user.nickName}"></a>
+							<a href="/user/logout" class="logout">退出</a>
+							<a href="/user/orders/1" target="_blank">我的订单</a>
+						</span>
+                <a href="#" target="_blank">帮助中心</a>
+            </div>
+        </div>
+    </div>
+    <div class="header-middle">
+        <div class="header-middle-logo">
+            <a href="#">
+                <img src="/css/img/logo.png" width="100px" height="100px">
+            </a>
+        </div>
+        <div class="header-middle-ca">
+            <a href="/user/cart" target="_blank"
+               class="btn btn-danger btn-shopping-cart"
+            ><span value="${id}" style="margin-right: 10px" class="glyphicon glyphicon-shopping-cart"></span>购物车</a>
+            <!--<div class="p-shop-cart">
+                <div class="p-shop-cart-goods">
+                    <h4 style="margin-left: 20px">我的购物车商品</h4>
+                    <div class="p-list-goods">
+
+                    </div>
+                    <div class="p-total-price">
+
+                    </div>
+                    <div class="p-go-shopcart">
+                        <a href="${pageContext.request.contextPath}/user/cart" target="_blank">去购物车查看</a>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+        <div class="header-middle-se">
+            <input type="text" name="condition" class="search" placeholder="商品/种类"/>
+            <button class="btn btn-info btn-search"><span class="glyphicon glyphicon-search"></span> 搜索</button>
+        </div>
+        <div class="header-middle-hot">
+            <p><a href="">尤妮佳丨</a><a href="">牙胶丨</a><a href="">收纳柜丨</a><a href="">隔尿垫丨</a><a href="">加州宝宝</a></p>
+        </div>
+    </div>
+    <div class="header-foot">
+        <div class="header-foot-r">
+            <a target="_blank" href="${pageContext.request.contextPath}/index.jsp" class="header-foot-r1">首页</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=运动"
+               class="header-foot-r1">运动户外</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=饮料"
+               class="header-foot-r1">饮料冲调</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=食品"
+               class="header-foot-r1">食品小吃</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=家电"
+               class="header-foot-r1">家电大全</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=数码"
+               class="header-foot-r1">数码产品</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=珠宝"
+               class="header-foot-r1">珠宝首饰</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/help.jsp" class="header-foot-r1">帮助中心</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="ic">
+        <div class="c-left">
+            <div class="title">
+                我的交易
+            </div>
+            <p><a th:href="@{/user/orders/1}" class="">我的订单</a></p>
+            <!--<div class="title">
+                我的收藏
+            </div>
+            <p><a href="${pageContext.request.contextPath}/user/myCollecting/1">我收藏的商品</a></p>-->
+
+            <div class="title">
+                我的账户
+            </div>
+            <p><a th:href="@{/user/infoManage}">账户信息</a></p>
+            <p><a th:href="@{/user/modifyPass}">修改密码</a></p>
+            <p><a th:href="@{/user/security}" class="a-selected">安全设置</a></p>
+            <p><a th:href="@{/user/addressManage}">地址管理</a></p>
+        </div>
+
+        <div class="c-right">
+            <div class="message">
+                <div class="message-title">
+                    <a>安全设置</a>
+                </div>
+                <div class="message-text">
+                    <div class="account-security">
+                        <div class="user-name align-text">
+                            <span class="user-text security-title">会员名:</span>
+                            <span class="user-text content" th:text="${userInfo.nickName}">pigpegg</span>
+                        </div>
+                        <div class="register-tel align-text">
+                            <span class="security-title">绑 定 手 机：</span>
+                            <span class="content" th:text="${userInfo.telePhone}">178****2019</span>
+                            <span class="modify">
+			                		<a href="/user/security/tele" title="修改手机" style="text-decoration:none;">修改手机  </a>
+                        		</span>
+                        </div>
+                        <div class="register-tel align-text" th:if="${userInfo.eMail!=null}" >
+                            <span class="security-title">邮  箱：</span>
+                            <span class="content" style="width:180px" th:text="${userInfo.eMail}">291**31@qq.com</span>
+                            <span class="modify" th:attr="data-email=${userInfo.eMail}" id="security-email">
+                                    <a href="#" title="邮箱状态" style="text-decoration:none;color:white" th:class="${'1'.equals(userInfo.isActiveEmail) ? 'green-background' : 'red-background'}" th:text="${userInfo.isActiveEmail=='1' ? '已激活':'未激活'}">未激活 </a>
+			                		<a href="/user/security/email" title="修改邮箱" style="text-decoration:none;" th:if="${'1'.equals(userInfo.isActiveEmail)}">修改邮箱  </a>
+                                    <a href="#" title="激活邮箱" style="text-decoration:none;" th:if="${'0'.equals(userInfo.isActiveEmail)}" id="active">激活邮箱  </a>
+		                	</span>
+                        </div>
+                        <div class="register-tel align-text" th:if="${userInfo.eMail==null}">
+                            <span class="security-title">邮  箱：</span>
+                            <span class="modify">
+			                		<a href="/user/security/email" title="添加邮箱" style="text-decoration:none;font-size:15px;">添加邮箱  </a>
+                        	</span>
+                        </div>
+                    </div>
+                   <!-- <div class="message-submit">
+                        <input type="button" class="btn-submit" value="提交">
+                    </div>-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-service">
+        <div class="service">
+            <h5 class="service1"></h5>
+            <span class="service-t">品类齐全，轻松购物</span>
+        </div>
+        <div class="service">
+            <h5 class="service2"></h5>
+            <span class="service-t">多仓直发，急速配送</span>
+        </div>
+        <div class="service">
+            <h5 class="service3"></h5>
+            <span class="service-t">正品行货，精致服务</span>
+        </div>
+        <div class="service">
+            <h5 class="service4"></h5>
+            <span class="service-t">天天低价，畅选无忧</span>
+        </div>
+    </div>
+    <div class="footer-help">
+        <ul class="help">
+            <li class="strong">使用帮助</li>
+            <li><a href="#" rel="nofollow">新手帮助</a></li>
+            <li><a href="#" rel="nofollow">乐豆体系</a></li>
+            <li><a href="#" rel="nofollow">正品承诺</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">支付方式</li>
+            <li><a href="#" rel="nofollow">支付方式</a></li>
+            <li><a href="#" rel="nofollow">支付流程</a></li>
+            <li><a href="#" rel="nofollow">跨境进口税</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">配送方式</li>
+            <li><a href="#" rel="nofollow">包邮政策</a></li>
+            <li><a href="#" rel="nofollow">发货时间</a></li>
+            <li><a href="#" rel="nofollow">配送区域</a></li>
+            <li><a href="#" rel="nofollow">送货验收</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">售后服务</li>
+            <li><a href="#" rel="nofollow">退货政策</a></li>
+            <li><a href="#" rel="nofollow">退货流程</a></li>
+            <li><a href="#" rel="nofollow">退款方式</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">联系方式</li>
+            <li><a href="#" rel="nofollow">总裁邮箱：ceo@lego.com</a></li>
+            <li><a href="#" rel="nofollow">商务合作：bd@lego.com</a></li>
+            <li><a href="#" rel="nofollow">媒体合作：pr@lego.com</a></li>
+            <li><a href="#" rel="nofollow">招商中心：zhaoshang@lego.com</a></li>
+        </ul>
+    </div>
+    <div class="footer-link">
+        <a href="javascript:;">关于乐购</a>丨<a href="javascript:;">加入乐购</a>丨<a href="javascript:;">商务合作</a>丨
+        <a href="javascript:;">帮助中心</a>丨<a href="javascript:;">联系我们</a>丨<a href="javascript:;">友情链接</a>丨
+        <a href="javascript:;">触屏版</a>丨<a href="javascript:;">媒体报道</a><br/>
+        <span class="footer-w">京公网安备：11010502027270 </span>|<span class="footer-w">营业执照：91110105582599307U</span>|
+        <span class="footer-w">食品经营许可证：SP1101051410296669 </span>|<span class="footer-w">出版物经营许可证：新出发京零字第朝160088号</span>|
+        <span class="footer-w">京ICP证140430号 </span><br/>
+        <span class="footer-w">京ICP备14006215号</span>|<span
+            class="footer-w">员工舞弊举报：jiancha@lego.com 电话：010-56733666</span><br/>
+        <span class="footer-w">通过本网站直接或者间接地推销商品或者服务的商业宣传活动均属“广告”</span><br/>
+        <span class="footer-w">Copyright &copy 2017 北京乐购在线商贸有限公司 Lego.com 保留一切权利</span>
+    </div>
+</div>
+<div class="modal fade" id="alertModal">
+    <div class="modal-dialog" style="margin-top:350px;width: 400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;font-size: 18px;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-dismiss" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <!-- 地址为http://localhost:8080/  显示的默认网页-->
+    <welcome-file-list>
+        <welcome-file>/index.html</welcome-file>
+    </welcome-file-list>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath*:applicationContext.xml
+        </param-value>
+    </context-param>
+    <!-- 加载log4j的配置文件log4j.properties -->
+    <!--<context-param>
+        <param-name>log4jConfiguration</param-name>
+        <param-value>classpath*:log4j2.xml</param-value>
+    </context-param>-->
+    <!--<listener>
+        <listener-class>
+            org.apache.logging.log4j.web.Log4jServletContextListener
+        </listener-class>
+    </listener>-->
+    <!--<filter>
+        <filter-name>openSessionInView</filter-name>
+        <filter-class>org.springframework.orm.hibernate5.support.OpenSessionInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>openSessionInView</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>-->
+    <!-- spring MVC config start-->
+    <servlet>
+        <servlet-name>spring</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <!-- 此处指向的的是SpringMVC的配置文件 -->
+            <param-value>classpath:/spring-mvc.xml</param-value>
+        </init-param>
+        <!--配置容器在启动的时候就加载这个servlet并实例化-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <!-- spring MVC config end-->
+
+
+    <!--  字符集过滤  -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--配置自定义过滤器-->
+    <!--<filter>
+        <filter-name>delegateFilter</filter-name>
+        <filter-class>com.shop.online.config.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetBean</param-name>
+            <param-value>customerFilter</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>delegateFilter</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>-->
+</web-app>

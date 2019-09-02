@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心-我的订单-乐购</title>
+    <link rel="icon" href="/css/img/icon.ico"/>
+    <link rel="stylesheet" href="/css/back/user/order.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/back/user/userCommon.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/common/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/back/user/initShopCart.css" type="text/css"/>
+    <script type="text/javascript" src="/js/common/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/common/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/back/user/order.js"></script>
+    <script type="text/javascript" src="/js/back/user/initShopCart.js"></script>
+    <meta name="Keywords" content="乐购全球购">
+    <script type="text/javascript" th:inline="javascript">
+        $(function () {
+            var currPage ='[[${pageBean.currentPage}]]';
+            var state = [[${state}]];
+            state = decodeURI(state);
+            var totalPage = [[${pageBean.pageCount}]];
+            if (currPage == '1') {
+                $("#prevPage").attr("href", "javascript:;");
+                $("#prevPage").parent().addClass("disabled");
+                $("#firstPage").attr("href", "javascript:;");
+                $("#firstPage").parent().addClass("disabled");
+            }
+            if (currPage == totalPage) {
+                $("#nextPage").attr("href", "javascript:;");
+                $("#nextPage").parent().addClass("disabled");
+                $("#lastPage").attr("href", "javascript:;");
+                $("#lastPage").parent().addClass("disabled");
+            }
+            //循环输出页码
+            for (var i = 1; i <= totalPage; i++) {
+                if (i <= 8) {
+                    if (state != null) {
+                        $(".page-next").before("<li class='li-page'>" +
+                            "<a href='/user/orders/" + i + "?state=" + state + "'>" +i + "</a>" +
+                            "</li>"
+                        );
+                    }
+                    else {
+                        $(".page-next").before("<li class='li-page'>" +
+                            "<a href='/user/orders/" + i + "'>" +i+ "</a>" +
+                            "</li>"
+                        );
+                    }
+                }
+            }
+            $.each($(".li-page"), function (i, e) {
+                if ($(this).text() == currPage) {
+                    $(this).addClass("active");
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+<input type="hidden" id="basePath" value="${pageContext.request.contextPath}">
+<div class="header">
+    <div class="header-top">
+        <div class="header-nav">
+            <div class="header-top-left">
+                <a href="javascript:;">手机乐购</a>
+            </div>
+            <div class="header-top-right">
+                <span style="margin-right: 40px">你好，欢迎来到乐购！</span>
+                <span th:if="${session.user == null}">
+							<a th:href="@{/user/login}">登录</a>
+							<a th:href="@{/user/register}">免费注册</a>
+						</span>
+                <span th:if="${session.user !=null}">
+							<a href="/user/infoManage" th:text="${session.user.nickName}"></a>
+							<a href="/user/logout" class="logout">退出</a>
+							<a href="/user/orders/1" target="_blank">我的订单</a>
+						</span>
+                <a href="#" target="_blank">帮助中心</a>
+            </div>
+        </div>
+    </div>
+    <div class="header-middle">
+        <div class="header-middle-logo">
+            <a href="${pageContext.request.contextPath}/index.jsp">
+                <img src="/css/img/logo.png" width="100px" height="100px">
+            </a>
+        </div>
+        <div class="header-middle-ca">
+            <a href="/user/cart" target="_blank"
+               class="btn btn-danger btn-shopping-cart"
+            ><span value="${id}" style="margin-right: 10px" class="glyphicon glyphicon-shopping-cart"></span>购物车</a>
+            <!--<div class="p-shop-cart">
+                <div class="p-shop-cart-goods">
+                    <h4 style="margin-left: 20px">我的购物车商品</h4>
+                    <div class="p-list-goods">
+
+                    </div>
+                    <div class="p-total-price">
+
+                    </div>
+                    <div class="p-go-shopcart">
+                        <a href="${pageContext.request.contextPath}/user/cart" target="_blank">去购物车查看</a>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+        <div class="header-middle-se">
+            <input type="text" name="condition" class="search" placeholder="商品/种类"/>
+            <button class="btn btn-info btn-search"><span class="glyphicon glyphicon-search"></span> 搜索</button>
+        </div>
+        <div class="header-middle-hot">
+            <p><a href="">尤妮佳丨</a><a href="">牙胶丨</a><a href="">收纳柜丨</a><a href="">隔尿垫丨</a><a href="">加州宝宝</a></p>
+        </div>
+    </div>
+    <div class="header-foot">
+        <div class="header-foot-r">
+            <a target="_blank" href="${pageContext.request.contextPath}/index.jsp" class="header-foot-r1">首页</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=运动"
+               class="header-foot-r1">运动户外</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=饮料"
+               class="header-foot-r1">饮料冲调</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=食品"
+               class="header-foot-r1">食品小吃</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=家电"
+               class="header-foot-r1">家电大全</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=数码"
+               class="header-foot-r1">数码产品</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/item/search/1?condition=珠宝"
+               class="header-foot-r1">珠宝首饰</a>
+            <a target="_blank" href="${pageContext.request.contextPath}/help.jsp" class="header-foot-r1">帮助中心</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="ic">
+        <div class="c-left">
+            <div class="title">
+                我的交易
+            </div>
+            <p><a th:href="@{/user/orders/1}" id="l1" class="a-selected">我的订单</a></p>
+            <!--<div class="title">
+                我的收藏
+            </div>
+            <p><a href="${pageContext.request.contextPath}/user/myCollecting/1">我收藏的商品</a></p>-->
+
+            <div class="title">
+                我的账户
+            </div>
+            <p><a th:href="@{/user/infoManage}">账户信息</a></p>
+            <p><a th:href="@{/user/modifyPass}">修改密码</a></p>
+            <p><a th:href="@{/user/security}">安全设置</a></p>
+            <p><a th:href="@{/user/addressManage}">地址管理</a></p>
+        </div>
+
+        <div class="c-right">
+            <div class="order-menu">
+                <li class="order-menu-li">
+                    <a th:href="@{/user/orders/1}" th:class="${state==null||state==''?'o1':''}">全部订单</a>
+                </li>
+                <li class="order-menu-li">
+                    <a th:href="@{/user/orders/1?state=待支付}" th:class="${'待支付'.equals(state) ? 'o1':''}">待支付
+                        <span th:text="${orderStates['待支付']!=null?orderStates['待支付'].longValue():0}"></span>
+                    </a>
+                </li>
+                <li class="order-menu-li">
+                    <a th:href="@{/user/orders/1?state=待发货}" th:class="${'待发货'.equals(state) ? 'o1' : ''}">待发货
+                        <span th:text="${orderStates['待发货']!=null?orderStates['待发货'].longValue():0}"></span>
+                    </a>
+
+                </li>
+                <li class="order-menu-li">
+                    <a th:href="@{/user/orders/1?state=待收货}" th:class="${'待收货'.equals(state)? 'o1' : ''}">待收货
+                        <span th:text="${orderStates['待收货']!=null?orderStates['待收货'].longValue():0}"></span>
+                    </a>
+                </li>
+                <li class="order-menu-li">
+                    <a th:href="@{/user/orders/1?state=待评价}" th:class="${'待评价'.equals(state)? 'o1' : ''}">待评价
+                        <span th:text="${orderStates['待评价']!=null?orderStates['待评价'].longValue():0}"></span>
+                    </a>
+                </li>
+            </div>
+            <div class="right-order-title">
+                <table class="table ">
+                    <tr style="text-align: center;background-color: #f1f1f1">
+                        <td width="560px">订单详情</td>
+                        <td width="90px">收货人</td>
+                        <td width="110px">金额</td>
+                        <td width="100px">交易状态</td>
+                        <td width="100px">操作</td>
+                    </tr>
+                </table>
+            </div>
+            <div th:each="order:${pageBean.resultList}">
+                <table class="table table-bordered">
+                    <tr>
+                        <td colspan="5" class="td-order">
+                            <span class="order-span" th:text="${order.createTime}">${item.orderDetail.createTime}</span>
+                            <span class="order-id">订单号：</span><span class="order-id1" th:text="${order.orderNum}">${item.id}</span>
+                            <div class="order-total-price">
+                                <span class="" th:text="|总金额：¥ ${order.amount}|"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="text-align: center">
+                        <td style="text-align: left">
+                            <div class="p-number" th:text="|X ${order.itemCount}|">
+                                ${comm.commodityNumber}
+                            </div>
+                            <div class="p-goods">
+                                <div class="p-img">
+                                    <a th:href="@{/product/details(id=${order.productId})}" target="_blank">
+                                        <img class="commodity-img" th:src="@{${order.imageLocation}}">
+                                    </a>
+                                </div>
+                                <div class="p-desc" style="float: left; width:120px;">
+                                    <a th:href="@{/product/details(id=${order.productId})}" target="_blank"
+                                       th:text="${order.description}">
+                                        ${comm.description}
+                                    </a>
+                                </div>
+                                <li class="list_info" style="float: left;margin-left: 5px;" th:with="skuGroupStrs=${order.skuGroup.split(',')}">
+                                    <p th:each="skuGroupStr:${skuGroupStrs}" th:text="${skuGroupStr}">规格：默认</p>
+                                </li>
+                            </div>
+                        </td>
+                        <td width="90px" rowspan="1">
+                            <div class="p-detail" >
+                                <span class="glyphicon glyphicon-user p-user" th:text="${order.receiver}"></span>
+                            </div>
+                        </td>
+                        <td width="110px">
+                            <div class="p-detail" th:text="|¥ ${order.price}|">
+                            </div>
+                        </td>
+                        <td width="100px" rowspan="1">
+                            <div class="p-order">
+                                <br>
+                                <span th:class="${('待支付').equals(order.orderStatus) ||  '已取消'.equals(order.orderStatus) ? 'span-wait-pay':''}"
+                                      th:text="${order.orderStatus}">${item.state}</span><br>
+                                <a class="p-order-b" th:href="@{'/user/order/detail/'+${order.orderNum}}">订单详情</a>
+                            </div>
+                        </td>
+                        <td width="100px" rowspan="1">
+                            <div class="p-order">
+                                <br>
+                                <a class="a-buy-again" href="javascript:;" th:if="${'已取消'.equals(order.orderStatus)}">再次购买</a>
+                                <div class="p-pay" th:if="${'待支付'.equals(order.orderStatus)}">
+                                    <a class="a-pay" th:attr="data-orderId=${order.orderNum},data-tradeId=${order.tradeId}" href="javascript:;">立即付款</a>
+                                </div>
+                                <a class="p-order-a" th:if="${'待支付'.equals(order.orderStatus)}" th:attr="data-orderId=${order.orderNum},data-tradeId=${order.tradeId}" href="javascript:;">取消订单</a>
+                                <a class="a-take-goods" th:attr="data-orderId=${order.orderNum},data-tradeId=${order.tradeId}" href="javascript:;"
+                                   th:if="${'待收货'.equals(order.orderStatus)}">立即收货</a><br th:if="${'待收货'.equals(order.orderStatus)}"/>
+                                <a class="a-comment" th:attr="data-orderId=${order.orderNum},data-tradeId=${order.tradeId}" href="javascript:;"
+                                   th:if="${'待评价'.equals(order.orderStatus)}">立即评价</a><br th:if="${'待评价'.equals(order.orderStatus)}"/>
+                                <a class="a-buy-again" href="javascript:;" th:if="${'已完成'.equals(order.orderStatus)}">再次购买</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="p-page">
+                <ul class="pagination">
+                    <li class="li-page">
+                        <a id="firstPage" th:href="@{/user/order/1(state=${state==null ? null : state})}">首页</a>
+                    </li>
+                    <li class="li-page">
+                        <a th:href="@{'/user/orders/'+${pageBean.currentPage-1}(state=${state==null ? null : state})}"
+                            id="prevPage">&laquo; 上一页</a>
+                    </li>
+                    <li class="li-page page-next">
+                        <a th:href="@{'/user/orders/'+${pageBean.currentPage+1}(state=${state==null ? null :state})}"
+                            id="nextPage">下一页 &raquo;</a>
+                    </li>
+                    <li class="li-page">
+                        <a id="lastPage" th:href="@{'/user/orders/'+${pageBean.pageSize}}
+                            ">尾页</a>
+                    </li>
+                    <li style="cursor: default">
+                        <span>当前第 <span th:text="|${pageBean.currentPage} / ${pageBean.pageCount} 页|"></span>&nbsp;
+                        <span th:text="|共 ${pageBean.totalCount} 条记录|">
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-service">
+        <div class="service">
+            <h5 class="service1"></h5>
+            <span class="service-t">品类齐全，轻松购物</span>
+        </div>
+        <div class="service">
+            <h5 class="service2"></h5>
+            <span class="service-t">多仓直发，急速配送</span>
+        </div>
+        <div class="service">
+            <h5 class="service3"></h5>
+            <span class="service-t">正品行货，精致服务</span>
+        </div>
+        <div class="service">
+            <h5 class="service4"></h5>
+            <span class="service-t">天天低价，畅选无忧</span>
+        </div>
+    </div>
+    <div class="footer-help">
+        <ul class="help">
+            <li class="strong">使用帮助</li>
+            <li><a href="#" rel="nofollow">新手帮助</a></li>
+            <li><a href="#" rel="nofollow">乐豆体系</a></li>
+            <li><a href="#" rel="nofollow">正品承诺</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">支付方式</li>
+            <li><a href="#" rel="nofollow">支付方式</a></li>
+            <li><a href="#" rel="nofollow">支付流程</a></li>
+            <li><a href="#" rel="nofollow">跨境进口税</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">配送方式</li>
+            <li><a href="#" rel="nofollow">包邮政策</a></li>
+            <li><a href="#" rel="nofollow">发货时间</a></li>
+            <li><a href="#" rel="nofollow">配送区域</a></li>
+            <li><a href="#" rel="nofollow">送货验收</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">售后服务</li>
+            <li><a href="#" rel="nofollow">退货政策</a></li>
+            <li><a href="#" rel="nofollow">退货流程</a></li>
+            <li><a href="#" rel="nofollow">退款方式</a></li>
+        </ul>
+        <ul class="help">
+            <li class="strong">联系方式</li>
+            <li><a href="#" rel="nofollow">总裁邮箱：ceo@lego.com</a></li>
+            <li><a href="#" rel="nofollow">商务合作：bd@lego.com</a></li>
+            <li><a href="#" rel="nofollow">媒体合作：pr@lego.com</a></li>
+            <li><a href="#" rel="nofollow">招商中心：zhaoshang@lego.com</a></li>
+        </ul>
+    </div>
+    <div class="footer-link">
+        <a href="javascript:;">关于乐购</a>丨<a href="javascript:;">加入乐购</a>丨<a href="javascript:;">商务合作</a>丨
+        <a href="javascript:;">帮助中心</a>丨<a href="javascript:;">联系我们</a>丨<a href="javascript:;">友情链接</a>丨
+        <a href="javascript:;">触屏版</a>丨<a href="javascript:;">媒体报道</a><br/>
+        <span class="footer-w">京公网安备：11010502027270 </span>|<span class="footer-w">营业执照：91110105582599307U</span>|
+        <span class="footer-w">食品经营许可证：SP1101051410296669 </span>|<span class="footer-w">出版物经营许可证：新出发京零字第朝160088号</span>|
+        <span class="footer-w">京ICP证140430号 </span><br/>
+        <span class="footer-w">京ICP备14006215号</span>|<span
+            class="footer-w">员工舞弊举报：jiancha@lego.com 电话：010-56733666</span><br/>
+        <span class="footer-w">通过本网站直接或者间接地推销商品或者服务的商业宣传活动均属“广告”</span><br/>
+        <span class="footer-w">Copyright &copy 2017 北京乐购在线商贸有限公司 Lego.com 保留一切权利</span>
+    </div>
+</div>
+<div class="modal fade" id="alertModal">
+    <div class="modal-dialog" style="margin-top:350px;width: 400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;font-size: 18px;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="btn-dismiss" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btn-operate">添加</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+</html>

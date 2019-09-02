@@ -1,0 +1,57 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/rabbit
+        http://www.springframework.org/schema/rabbit/spring-rabbit-3.0.xsd">
+
+    <!-- 连接服务配置 如果MQ服务器在远程服务器上，请新建用户用新建的用户名密码  guest默认不允许远程登录-->
+    <rabbit:connection-factory id="connectionFactory"
+                               host="localhost" username="guest" password="guest" port="5672"
+                               virtual-host="/" channel-cache-size="5" publisher-confirms="true" publisher-returns="true"/>
+    <!-- 配置爱admin，自动根据配置文件生成交换器和队列，无需手动配置 -->
+    <rabbit:admin connection-factory="connectionFactory" />
+    <context:property-placeholder location="classpath:rabbitConfig.properties"/>
+    <!--延迟队列-->
+    <rabbit:queue name="${delay.order.queue}" auto-delete="false" durable="false" exclusive="false" id="delayQueue">
+        <rabbit:queue-arguments>
+            <entry key="x-message-ttl" value="${delay.timeout}" value-type="java.lang.Long"/>
+            <entry key="x-dead-letter-exchange" value="${delay.order.queue}"/>
+            <entry key="x-dead-letter-routing-key" value="${dead.letter.routing.key}"/>
+        </rabbit:queue-arguments>
+    </rabbit:queue>
+
+    <!--死信队列-->
+    <rabbit:queue name="${dead.letter.queue}" auto-delete="true" durable="false" exclusive="true" id="deadQueue">
+    </rabbit:queue>
+
+    <!--延迟交换并绑定延迟队列-->
+    <rabbit:direct-exchange name="${delay.order.exchange}" auto-declare="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="delayQueue" key="${delay.order.routing.key}"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!--声明死信交换并绑定死信队列-->
+    <rabbit:direct-exchange name="${dead.letter.exchange}" auto-declare="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="deadQueue" key="${dead.letter.routing.key}"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!--<rabbit:template id="delayTemplate" connection-factory="connectionFactory" exchange="${delay.order.exchange}"
+                     routing-key="${delay.order.routing.key}" queue="${delay.order.queue}"
+    />
+
+    <rabbit:template id="deadTemplate" connection-factory="connectionFactory" exchange="${dead.letter.exchange}"
+                     queue="${dead.letter.queue}" routing-key="${dead.letter.routing.key}"/>-->
+
+    <bean id="orderDelayService" class="com.shop.online.service.impl.RabbitMqServiceImpl"/>
+    <rabbit:listener-container acknowledge="manual" max-concurrency="1" concurrency="1" prefetch="1" >
+    <rabbit:listener ref="orderDelayService" queues="${dead.letter.queue}"/>
+    </rabbit:listener-container>
+</beans>

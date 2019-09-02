@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>login-user</title>
+    <link rel="stylesheet" href="/css/pintuer.css">
+    <script src="/js/sys/jquery.js"></script>
+    <script src="/js/sys/pintuer.js"></script>
+    <script src="/js/sys/respond.js"></script>
+    <script src="/js/sys/register.js"></script>
+</head>
+<body>
+<div align="center">
+    <form action="/user/register/handler" method="post">
+        <div class="panel padding" style="width: 450px;text-align: left;">
+            <div class="text-center">
+                <br>
+                <h2><strong>Welcome To LoGou</strong></h2></div>
+            <div class="" style="padding:30px;">
+                <div class="form-group">
+                    <div class="field field-icon-right">
+                        <input type="text" class="input" name="mobile" placeholder="手机号码"maxlength="11" data-validate="required:请填写手机号码" />
+                        <span class="icon icon-mobile"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field field-icon-right">
+                        <input type="password" class="input" name="password" maxlength="32" placeholder="登录密码" data-validate="required:请填写密码" />
+                        <span class="icon icon-key"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field field-icon-right">
+                        <input type="text" class="input" name="loginName" maxlength="32" placeholder="用户名" data-validate="required:请填写用户名" />
+                        <span class="icon icon-user"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field">
+                        <div class="input-group padding-little-top">
+                            <input type="text" class="input" name="passcode" maxlength="6" placeholder="短信验证码" data-validate="required:请填写手机收到的短信验证码" />
+                            <span class="addbtn">
+			                    <button type="button" class="button sendVerifyCode">
+			                        获取验证码</button>
+			                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field">
+                        <button class="button button-block bg-main text-big">立即注册</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field text-center">
+                        <p class="text-muted text-center"> <a class="" href="/user/forgotpassw"><small>忘记密码了？</small></a> | <a class="" href="/user/login">已有帐号，去登录</a>
+                        </p>
+                    </div>
+                </div>
+                <div th:if="${session.registerMsg != null}" class="alert alert-green bounce">
+                    <span class="close rotate-hover"></span><strong th:text="${session.registerMsg}"></strong>
+                </div>
+<!--
+                <div class="text-right text-small text-gray padding-top"><a class="text-gray" target="_blank" href="http://www.pintuer.com">拼图</a> 版权所有</div>
+-->
+            </div>
+        </div>
+    </form>
+</div>
+<!--<script type="text/javascript">
+    $(function() {
+        $(".mobile").on("click", function () {
+            var mobilValue = $(".mobile")[0].val();
+            console.log(mobilValue);
+            if(mobilValue.length()>0 && mobilValue.length()<12) {
+                if(!(/^1[34578]\d{9}$/.test(mobilValue))) {
+                    alert("手机号码格式不正确");
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    data: {"telephon":mobilValue},
+                    url: "/user/checktele",
+                    success: function (data) {
+                        if(data == "doubled") {
+                            alert("此号码已被注册,请更换号码注册！");
+                        }
+                    }
+                });
+            }
+        })
+    })
+</script>-->
+</body>

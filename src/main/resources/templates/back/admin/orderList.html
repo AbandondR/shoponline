@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<TITLE> 后台管理界面</TITLE>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="icon" href="/css/img/icon.ico" />
+	<link rel="stylesheet" href="/css/common/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/back/admin/orderList.css">
+	<link rel="stylesheet" href="/skins/flat/red.css">
+	<link rel="stylesheet" href="/css/back/admin/adminCommon.css">
+	<script type="text/javascript" src="/js/common/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="/js/common/bootstrap.js"></script>
+	<script type="text/javascript" src="/js/common/icheck.min.js"></script>
+	<script type="text/javascript" src="/js/back/admin/orderList.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var currPage ='[[${orderPageBean.currentPage}]]';
+            if([[${state!=null}]]) {
+                var state = '[[${state}]]';
+			}
+
+            state = decodeURI(state);
+            var totalPage = [[${orderPageBean.pageCount}]];
+            if (currPage == '1') {
+                $("#prevPage").attr("href", "javascript:;");
+                $("#prevPage").parent().addClass("disabled");
+                $("#firstPage").attr("href", "javascript:;");
+                $("#firstPage").parent().addClass("disabled");
+            }
+            if (currPage == totalPage) {
+                $("#nextPage").attr("href", "javascript:;");
+                $("#nextPage").parent().addClass("disabled");
+                $("#lastPage").attr("href", "javascript:;");
+                $("#lastPage").parent().addClass("disabled");
+            }
+            //循环输出页码
+            for (var i = 1; i <= totalPage; i++) {
+                if (i <= 6) {
+                    $(".page-next").before("<li class='li-page'>" +
+                        "<a href='/admin/orderList/"+i+
+                        "?condition=[[${condition}]]" +
+                        "&state=[[${state}]]'>"+i+"</a>" +
+                        "    </li>" +
+                        "");
+
+                }
+            }
+            $.each($(".li-page"), function (i, e) {
+                if ($(this).text() == currPage) {
+                    $(this).addClass("active");
+                }
+            })
+			$(".btn-state").each(function (i,e) {
+				if($(this).attr("data-state") == state){
+				    $(this).removeClass("btn-info");
+                    $(this).addClass("btn-warning");
+                }
+            })
+        })
+    </script>
+</head>
+
+<body>
+<input type="hidden" id="basePath" value="">
+<div class="navbar header navbar-fixed-top" role="navigation">
+	<div class="logo">
+		<span class="span-title">
+			<a target="_blank" class="title-home" href="${pageContext.request.contextPath}/index.jsp">
+				<span class="glyphicon glyphicon-home"></span></a>  后台管理</span>
+	</div>
+	<div class="logout">
+		<span class="span-username"><span class="glyphicon glyphicon-user"></span><span th:text="${session.admin.loginName}"></span></span>
+		<input type="button" class="btn btn-default" value="注销" id="btn-logout">
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="nav-left">
+		<div class="col-md-2 sidebar">
+			<li class="nav-li ">
+				<a class="" href="/admin/product/add" target="_top">商 品 管 理</a>
+			</li>
+			<li class="nav-li">
+				<a class="" href="/admin/kindList/1" target="_top">分 类 管 理</a>
+			</li>
+			<li class="nav-li nav-active">
+				<a class="" href="/admin/orderList/1" target="_top">订 单 管 理</a>
+			</li>
+			<li class="nav-li">
+				<a class="" href="/admin/logList/1" target="_top">日 志 管 理</a>
+			</li>
+			<li class="nav-li">
+				<a class="" href="/admin/userList/1" target="_top">用 户 管 理</a>
+			</li>
+		</div>
+	</div>
+	<div class="col-md-9 col-xs-offset-2 nav-right">
+		<div class="page-header">
+			<div class="title"><span>订单管理</span></div>
+		</div>
+		<div class="header-search">
+
+			<div class="search-order-state">
+				<span class="span-condition">条件查询：</span>
+				<a th:href="@{/admin/orderList/1(condition=${condition},state='00000')}" class="btn btn-info btn-state" data-state="00000">已取消</a>
+				<a th:href="@{/admin/orderList/1(condition=${condition},state='0000')}" class="btn btn-info btn-state" data-state="0000">待付款</a>
+				<a th:href="@{/admin/orderList/1(condition=${condition},state='0001')}" class="btn btn-info btn-state" data-state="0001">待发货</a>
+				<a th:href="@{/admin/orderList/1(condition=${condition},state='0011')}" class="btn btn-info btn-state" data-state="0011">待收货</a>
+				<a th:href="@{/admin/orderList/1(condition=${condition},state='0111')}" class="btn btn-info btn-state" data-state="0111">待评价</a>
+				<a th:href="@{/admin/orderList/1(condition=${condition},state='11111')}" class="btn btn-info btn-state" data-state="11111">已完成</a>
+			</div>
+			<div class="box-search">
+				<form action="/admin/orderList/1/" class="form-inline" method="get">
+					<input type="hidden" id="state" th:value="${state}">
+					<input type="text" name="condition" class="form-control input-condition" th:value="${condition}" placeholder="订单号">
+					<input type="button" class="btn btn-info btn-search" value="搜索">
+					<a href="/admin/orderList/1" class="btn btn-info">清空条件</a>
+				</form>
+			</div>
+		</div>
+			<div class="no-order" th:if="${orderPageBean.resultList.size() == 0}">
+				<br/><br/>
+				<span>抱歉，没有搜索到您想要的订单。</span>
+			</div>
+		<table class="table table-bordered table-responsive table-hover text-center">
+			<tr class="info" style="text-align: center">
+                <td><b>订单号</b></td>
+				<td><b>收件人</b></td>
+                <td><b>订单状态</b></td>
+				<td><b>订单总价</b></td>
+				<td><b>创建时间</b></td>
+				<td><b>操作</b></td>
+			</tr>
+                <tr th:each="item:${orderPageBean.resultList}">
+					<td th:text="${item.orderNum}"></td>
+					<td th:text="${item.receiver}"></td>
+					<td th:text="${item.orderStatus}"></td>
+					<td th:text="|¥ ${item.amount}|"></td>
+					<td th:text="${#dates.format(item.createTime.getTime(), 'yyyy-MM-dd HH:mm:ss')}"</td>
+					<td>
+						<button type="button" class="btn btn-info btn-edit-order"
+						><span th:attr="value=${item.orderNum}" class="glyphicon glyphicon-zoom-out"></span> 查看</button>&nbsp;
+					</td>
+				</tr>
+		</table>
+		<div class="col-xs-offset-4">
+			<ul class="pagination">
+				<li class="li-page">
+					<a id="firstPage" href="/admin/orderList/1">首页</a>
+				</li>
+				<li class="li-page">
+					<a th:href="@{'/admin/orderList/'+${orderPageBean.currentPage-1}(condition=${condition},state=${state})}"
+					   id="prevPage">&laquo; 上一页</a>
+				</li>
+				<!--<%&#45;&#45;<li class="li-page">
+					<a href="${pageContext.request.contextPath}/admin/orderList/1?condition=${condition}&state=${state}">1</a>
+				</li>&#45;&#45;%>-->
+
+				<li class="li-page page-next">
+					<a th:href="@{'/admin/orderList/'+${orderPageBean.currentPage+1}(condition=${condition}, state=${state})}"
+					   id="nextPage">下一页 &raquo;</a>
+				</li>
+				<li class="li-page">
+					<a id="lastPage"  th:href="@{'/admin/orderList/'+${orderPageBean.pageCount}(condition=${condition},state=${state})}">尾页</a>
+				</li>
+				<li style="cursor: default">
+                        <span>当前第 <span th:text="|${orderPageBean.currentPage} / ${orderPageBean.pageCount} 页|"></span>&nbsp;
+                        <span th:text="|共 ${orderPageBean.totalCount} 条记录|">
+                            </span>
+                        </span>
+				</li>
+			</ul>
+		</div>
+		<br>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>乐购-全球购</title>
+		<link rel="icon" href="/css/img/icon.ico" />
+		<link rel="stylesheet" href="/css/front/index.css" type="text/css" />
+		<link rel="stylesheet" href="/css/common/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/back/user/userCommon.css" type="text/css" />
+		<link rel="stylesheet" href="/css/back/user/initShopCart.css" type="text/css" />
+		<script type="text/javascript" src="/js/common/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="/js/common/bootstrap.js"></script>
+		<script type="text/javascript" src="/js/front/index.js"></script>
+		<script type="text/javascript" src="/js/back/user/initShopCart.js"></script>
+		<meta name="Keywords" content="乐购全球购">
+	</head>
+	<body>
+	<input type="hidden" id="basePath" value="">
+		<div class="header">
+			<div class="header-top">
+				<div class="header-nav">
+					<div class="header-top-left">
+						<a href="javascript:;">手机乐购</a>
+					</div>
+					<div class="header-top-right">
+						<span style="margin-right: 40px">你好，欢迎来到乐购！</span>
+						<span th:if="${session.user == null}">
+							<a href="/user/login">登录</a>
+							<a href="/user/register">免费注册</a>
+						</span>
+						<span th:if="${session.user !=null}">
+							<a href="/user/infoManage" th:text="${session.user.nickName}"></a>
+							<a href="/user/logout" class="logout">退出</a>
+							<a href="/user/orders/1" target="_blank">我的订单</a>
+						</span>
+						<a href="#" target="_blank">帮助中心</a>
+					</div>
+				</div>
+			</div>
+			<div class="header-middle">
+				<div class="header-middle-logo">
+					<a href="#">
+					<img src="/css/img/logo.png" width="100px" height="100px">
+					</a>
+				</div>
+				<div class="header-middle-ca">
+					<div class="p-shop-cart">
+						<!--<div class="p-shop-cart-goods">
+							<h4 style="margin-left: 20px">我的购物车商品</h4>
+							<div class="p-list-goods">
+
+							</div>
+							<div class="p-total-price">
+
+							</div>
+							<div class="p-go-shopcart">
+								<a href="/user/cart" target="_blank">去购物车查看</a>
+							</div>
+						</div>-->
+					</div>
+					<a href="/user/cart" target="_blank" class="btn btn-danger btn-shopping-cart"
+					><span value="${id}" style="margin-right: 10px" class="glyphicon glyphicon-shopping-cart"></span>购物车</a>
+
+				</div>
+				<div class="header-middle-se">
+					<input type="text" name="condition" class="search" placeholder="商品/种类" />
+					<button class="btn btn-info btn-search"><span class="glyphicon glyphicon-search"></span>  搜索</button>
+				</div>
+				<div class="header-middle-hot">
+					<p><a href="">尤妮佳丨</a><a href="">牙胶丨</a><a href="">收纳柜丨</a><a href="">隔尿垫丨</a><a href="">加州宝宝</a></p>
+				</div>
+			</div>
+			<div class="header-foot">
+				<div class="header-foot-r">
+					<a target="_blank" href="/index.jsp" class="header-foot-r1">首页</a>
+					<a target="_blank" href="/item/search/1?condition=运动" class="header-foot-r1">运动户外</a>
+					<a target="_blank" href="/item/search/1?condition=饮料" class="header-foot-r1">饮料冲调</a>
+					<a target="_blank" href="/item/search/1?condition=食品" class="header-foot-r1">食品小吃</a>
+					<a target="_blank" href="/item/search/1?condition=家电" class="header-foot-r1">家电大全</a>
+					<a target="_blank" href="/item/search/1?condition=数码" class="header-foot-r1">数码产品</a>
+					<a target="_blank" href="/item/search/1?condition=珠宝" class="header-foot-r1">珠宝首饰</a>
+					<a target="_blank" href="/help.jsp" class="header-foot-r1">帮助中心</a>
+					<div class="head" id="head">
+						<div class="head-l">
+							<div class="inner" th:if="${productCatas != null}" th:each="productCata:${productCatas}">
+								<div class="i">
+									<a href="" th:text="${productCata.cataName}">家用电器</a>
+								</div>
+								<p>
+									<a class="child-cata" th:each="child:${productCata.childrens}" href="" th:href="@{/product/findproduct(cataId=${child.id}, page=1)}" target="_blank" th:text="${child.cataName}"
+									   style="font-size: 12px;margin-left: 4px;line-height: 18px;" >电视</a>
+								</p>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="header-footer">
+				<a href="javascript:;"><img class="h1" src="/css/img/index/c1.jpg" width="100%" height="492px" style="display: block;" /></a>
+				<a href="javascript:;"><img class="h1" src="/css/img/index/c2.jpg" width="100%" height="492px" /></a>
+				<a href="javascript:;"><img class="h1" src="/css/img/index/c3.jpg" width="100%" height="492px" /></a>
+				<a href="javascript:;"><img class="h1" src="/css/img/index/c4.jpg" width="100%" height="492px" /></a>
+				<a href="javascript:;"><img class="h1" src="/css/img/index/c5.jpg" width="100%" height="492px" /></a>
+				<div class="numbox">
+					<span>
+						<a href="javascript:void(0)" style="background-color: javascript:;FF0036;"></a>
+						<a href="javascript:void(0)"></a>
+						<a href="javascript:void(0)"></a>
+						<a href="javascript:void(0)"></a>
+						<a href="javascript:void(0)"></a>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="g1">
+				<a href="javascript:;"><img src="/css/img/index/g1.jpg"></a>
+			</div>
+			<div class="recommend">
+				<div class="recommend-t">
+					<a class="recommend-1">为你推荐</a>
+					<a>千万妈妈&nbsp;精明之选</a>
+				</div>
+			</div>
+			<div class="layout-1">
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l1.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">儿童孕妇驱蚊扣8个颜色随机</div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>29</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥49.00</em></span>
+							</div>
+							<div class="buy">
+								<span>5799人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l2.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">蒙牛纯甄常温酸牛奶200g*12盒</div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>38.90</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥68.00</em></span>
+							</div>
+							<div class="buy">
+								<span>519人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l3.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">子初蚊香液超值6瓶组合装</div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>39.90</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥198.00</em></span>
+							</div>
+							<div class="buy">
+								<span>3.6万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l4.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">车用可伸缩卡通防晒遮阳帘</div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>26.90</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥119.00</em></span>
+							</div>
+							<div class="buy">
+								<span>2.3万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l5.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">原木抽纸110抽*24包整箱装</div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>29.90</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥198.00</em></span>
+							</div>
+							<div class="buy">
+								<span>1.4万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l6.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">贝亲 Pigeon 奶瓶清洁剂</div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>36.00</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥45.00</em></span>
+							</div>
+							<div class="buy">
+								<span>3.2万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l7.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">蜜拉贝儿 mirabelle 婴儿湿巾</div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>28.00</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥118.00</em></span>
+							</div>
+							<div class="buy">
+								<span>4.8万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l8.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">NUK 超厚特柔婴儿湿巾 </div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>39.90</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥59.00</em></span>
+							</div>
+							<div class="buy">
+								<span>3万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l9.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">加州宝宝 金盏花面霜 </div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>89.90</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥198.00</em></span>
+							</div>
+							<div class="buy">
+								<span>4万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+				<a target="_blank" title="" class="groupblock" href="javascript:;">
+					<div class="layout-picture">
+						<img src="/css/img/index/l10.jpg" height="218px" width="218px">
+					</div>
+					<div class="layout-text">
+						<div class="tit">贝医生 巴氏牙刷 旅行装4支 </div>
+						<div class="price">
+							<div class="new">
+								<span>拼团价:￥<em>59.00</em></span>
+							</div>
+							<div class="btn">
+								<span>去拼团</span>
+							</div>
+						</div>
+						<div class="price">
+							<div class="old">
+								<span>市场价:<em>￥99.00</em></span>
+							</div>
+							<div class="buy">
+								<span>8万人已团</span>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sale">
+				<div class="sale-tit">
+					<a class="recommend-1">今日特卖</a>
+					<a>每天10点上新</a>
+				</div>
+			</div>
+			<div class="block">
+				<div class="layout-2">
+					<div class="layout-2-l">
+						<a href="javascript:;" target="_blank"><img src="/css/img/index/layout2-1.jpg" width="720px" height="350px"></a>
+					</div>
+					<div class="layout-2-r">
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-2.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>托马斯&朋友（玩具） THOMAS & FRIENDS 儿童水写布绘画带印章</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>59.00</em></span>
+								</div>
+								<div class="old2">
+									<span>139.00</span>
+								</div>
+							</div>
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-3.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>澳贝 auby 乖乖小鸭宝宝益智学爬会下蛋鸭子婴儿学爬行玩具</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>69.00</em></span>
+								</div>
+								<div class="old2">
+									<span>159.00</span>
+								</div>
+							</div>
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-4.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>火火兔 ALILO I6英语视频早教机触摸屏护眼可充电下载 16G</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>409.00</em></span>
+								</div>
+								<div class="old2">
+									<span>798.00</span>
+								</div>
+							</div>
+					</div>
+				</div>
+
+				<div class="layout-2">
+					<div class="layout-2-l">
+						<a href="javascript:;" target="_blank"><img src="/css/img/index/layout2-5.jpg" width="720px" height="350px"></a>
+					</div>
+					<div class="layout-2-r">
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-6.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>Augelute 夏季男宝宝绅士风短袖连体衣马甲2件套 棕色+咖啡色</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>94.00</em></span>
+								</div>
+								<div class="old2">
+									<span>419.00</span>
+								</div>
+							</div>
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-7.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>Augelute 夏季女宝宝荷叶无袖背心连身短裤爬服 蓝色</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>83.00</em></span>
+								</div>
+								<div class="old2">
+									<span>369.00</span>
+								</div>
+							</div>
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-8.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>Augelute 夏款女宝宝三角领子造型连身衣哈衣爬服 蓝色</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>89.00</em></span>
+								</div>
+								<div class="old2">
+									<span>409.00</span>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+
+				<div class="layout-2">
+					<div class="layout-2-l">
+						<a href="javascript:;" target="_blank"><img src="/css/img/index/layout2-9.jpg" width="720px" height="350px"></a>
+					</div>
+					<div class="layout-2-r">
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-10.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>A知了熊 Cicada bear 婴儿开裆爬服</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>49.00</em></span>
+								</div>
+								<div class="old2">
+									<span>78.00</span>
+								</div>
+							</div>
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-11.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>知了熊 Cicada bear 婴儿纯棉爬服米白</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>48.00</em></span>
+								</div>
+								<div class="old2">
+									<span>78.00</span>
+								</div>
+							</div>
+							<div class="layout2-picture">
+								<img src="/css/img/index/layout2-12.jpg" height="78px" width="72px" class="r2" />
+							</div>
+							<div class="layout2-text">
+								<div class="tit2">
+									<span>舍予良仓 MLGB 进口纯棉宝宝信封领长袖三角连体衣 红</span>
+								</div>
+								<div class="new2">
+									<span>￥<em>79.00</em></span>
+								</div>
+								<div class="old2">
+									<span>114.00</span>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="footer-service">
+				<div class="service">
+					<h5 class="service1"></h5>
+					<span class="service-t">品类齐全，轻松购物</span>
+				</div>
+				<div class="service">
+					<h5 class="service2"></h5>
+					<span class="service-t">多仓直发，急速配送</span>
+				</div>
+				<div class="service">
+					<h5 class="service3"></h5>
+					<span class="service-t">正品行货，精致服务</span>
+				</div>
+				<div class="service">
+					<h5 class="service4"></h5>
+					<span class="service-t">天天低价，畅选无忧</span>
+				</div>
+			</div>
+			<div class="footer-help">
+				<ul class="help">
+					<li class="strong">使用帮助</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">新手帮助</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">乐豆体系</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">正品承诺</a>
+					</li>
+				</ul>
+				<ul class="help">
+					<li class="strong">支付方式</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">支付方式</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">支付流程</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">跨境进口税</a>
+					</li>
+				</ul>
+				<ul class="help">
+					<li class="strong">配送方式</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">包邮政策</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">发货时间</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">配送区域</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">送货验收</a>
+					</li>
+				</ul>
+				<ul class="help">
+					<li class="strong">售后服务</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">退货政策</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">退货流程</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">退款方式</a>
+					</li>
+				</ul>
+				<ul class="help">
+					<li class="strong">联系方式</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">总裁邮箱：ceo@lego.com</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">商务合作：bd@lego.com</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">媒体合作：pr@lego.com</a>
+					</li>
+					<li>
+						<a href="javascript:;" rel="nofollow">招商中心：zhaoshang@lego.com</a>
+					</li>
+				</ul>
+			</div>
+			<div class="footer-link">
+				<a href="javascript:;">关于乐购</a>丨
+				<a href="javascript:;">加入乐购</a>丨
+				<a href="javascript:;">商务合作</a>丨
+				<a href="javascript:;">帮助中心</a>丨
+				<a href="javascript:;">联系我们</a>丨
+				<a href="javascript:;">友情链接</a>丨
+				<a href="javascript:;">触屏版</a>丨
+				<a href="javascript:;">媒体报道</a><br/>
+				<span class="footer-w">京公网安备：11010502027270 </span>|<span class="footer-w">营业执照：91110105582599307U</span>|
+				<span class="footer-w">食品经营许可证：SP1101051410296669 </span>|<span class="footer-w">出版物经营许可证：新出发京零字第朝160088号</span>|
+				<span class="footer-w">京ICP证140430号 </span><br />
+				<span class="footer-w">京ICP备14006215号</span>|<span class="footer-w">员工舞弊举报：jiancha@lego.com 电话：010-56733666</span><br />
+				<span class="footer-w">通过本网站直接或者间接地推销商品或者服务的商业宣传活动均属“广告”</span><br />
+				<span class="footer-w">Copyright &copy 2017 北京乐购在线商贸有限公司 Lego.com 保留一切权利</span>
+			</div>
+		</div>
+	</body>
+</html>

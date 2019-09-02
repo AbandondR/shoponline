@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <TITLE> 后台管理界面</TITLE>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="icon" href="/css/img/icon.ico" />
+    <link rel="stylesheet" href="/css/common/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/back/admin/adminCommon.css">
+    <link rel="stylesheet" href="/css/back/admin/addproduct.css">
+    <link rel="stylesheet" href="/css/common/zTreeStyle.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/fileinput.css" media="all" type="text/css" />
+    <link rel="stylesheet" href="/css/back/admin/kindList.css">
+    <script type="text/javascript" src="/js/common/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/common/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/common/jquery.ztree.all.js"></script>
+    <script type="text/javascript" src="/js/common/fileinput.js"></script>
+    <script type="text/javascript" src="/js/back/admin/addProduct.js"></script>
+    <script type="text/javascript" >
+
+    </script>
+</head>
+
+<body>
+<input type="hidden" id="basePath" value="${pageContext.request.contextPath}">
+<div class="navbar header navbar-fixed-top" role="navigation">
+    <div class="logo">
+		<span class="span-title">
+			<a target="_blank" class="title-home" href="${pageContext.request.contextPath}/index.jsp">
+				<span class="glyphicon glyphicon-home"></span></a>  后台管理</span>
+    </div>
+    <div class="logout">
+        <span class="span-username"><span class="glyphicon glyphicon-user"></span><span th:text="${session.admin.loginName}"></span></span>
+        <input type="button" class="btn btn-default" value="注销" id="btn-logout">
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="nav-left">
+        <div class="col-md-2 sidebar">
+            <li class="nav-li nav-active">
+                <a class="" href="/admin/product/add" target="_top">商 品 管 理</a>
+            </li>
+            <li class="nav-li ">
+                <a class="" href="/admin/kindList/1" target="_top">分 类 管 理</a>
+            </li>
+            <li class="nav-li">
+                <a class="" href="/admin/orderList/1" target="_top">订 单 管 理</a>
+            </li>
+            <li class="nav-li">
+                <a class="" href="/admin/logList/1" target="_top">日 志 管 理</a>
+            </li>
+            <li class="nav-li">
+                <a class="" href="/admin/userList/1" target="_top">用 户 管 理</a>
+            </li>
+        </div>
+    </div>
+    <div class="col-md-9 col-xs-offset-2 nav-right">
+        <!--<div class="page-header">
+            <div class="title">
+                <span>分类管理</span>
+                <span th:if="${idCondition!=null and !idCondition.trim().equals('')}" th:text="|/${conditionCataName}|"></span>
+            </div>
+            <div class="add-commodity">
+                <button type="button" class="btn btn-success btn-add-commodity" data-toggle="modal" data-target="#modal-add-kind">
+                    <span class="glyphicon glyphicon-plus"></span>   添加分类
+                </button>
+            </div>
+        </div>
+        <div class="header-search">
+            <div class="box-search">
+                <form action="/admin/orderList/1/" class="form-inline" method="get">
+                    &lt;!&ndash;<input type="hidden" id="state" th:value="${state}">&ndash;&gt;
+                    <input type="text" name="condition" class="form-control input-condition" th:value="${nameCondition}" placeholder="分类名称">
+                    <input type="button" class="btn btn-info btn-search" value="搜索">
+                    <a href="/admin/kindList/1" class="btn btn-info">清空条件</a>
+                </form>
+            </div>
+        </div>
+        <div class="no-order" th:if="${cataPageBean.resultList.size() == 0}">
+            <span>抱歉，没有搜索到您想要的分类。</span>
+        </div>
+        <table class="table table-bordered table-responsive table-hover text-center">
+            <tr class="info" style="text-align: center">
+                <td><b>编号</b></td>
+                <td><b>分类id</b></td>
+                <td><b>名称</b></td>
+                <td><b>上级分类编号</b></td>
+                <td><b>状态</b></td>
+                <td><b>操作</b></td>
+            </tr>
+            <tr th:each="item:${cataPageBean.resultList}">
+                <td th:text="${itemStat.index + 1}"></td>
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.cataName}"></td>
+                <td th:text="${item.parentId}"></td>
+                <td>
+                    <span th:text="${item.status.equals('1') ?  '启用' : '禁用'}" th:class="${item.status.equals('1') ? 'status cata_status_on' : 'status cata_status_off'}" th:attr="data-status=${item.status},data-id=${item.id}"></span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-info btn-edit-kind" data-toggle="modal" data-target="#modal-edit-kind"
+                    ><span th:value="${item.id}" class="glyphicon glyphicon-edit"></span> 修改名称</button>&nbsp;
+                    <button type="button" class="btn btn-info btn-edit-smallKind"
+                    ><span th:attr="idCondition=${item.id},nameCondition=${nameCondition}" class="glyphicon glyphicon-zoom-out">查看子分类</span></button>
+                    &lt;!&ndash;<button type="button" class="btn btn-warning btn-del-kind"
+                    ><span th:value="${item.id}" class="glyphicon glyphicon-remove">删除</span></button>&ndash;&gt;
+                </td>
+            </tr>
+        </table>
+        <div class="col-xs-offset-4">
+            <ul class="pagination">
+                <li class="li-page">
+                    <a id="firstPage" th:href="@{/admin/kindList/1(idCondition=${idCondition}, nameCondition=${nameCondition})}">首页</a>
+                </li>
+                <li class="li-page">
+                    <a th:href="@{'/admin/kindList/'+${cataPageBean.currentPage-1}(idCondition=${idCondition}, nameCondition=${nameCondition})}"
+                       id="prevPage">&laquo; 上一页</a>
+                </li>
+                &lt;!&ndash; <li class="li-page">
+                    <a href="/admin/kindList/1">1</a>
+                </li>&ndash;&gt;
+
+                <li class="li-page page-next">
+                    <a th:href="@{'/admin/kindList/'+${cataPageBean.currentPage+1}(idCondition=${idCondition}, nameCondition=${nameCondition})}"
+                       id="nextPage">下一页 &raquo;</a>
+                </li>
+                <li class="li-page">
+                    <a id="lastPage"  th:href="@{'/admin/kindList/'+${cataPageBean.pageCount}(idCondition=${idCondition}, nameCondition=${nameCondition})}">尾页</a>
+                </li>
+                <li style="cursor: default">
+                        <span>当前第 <span th:text="|${cataPageBean.currentPage} / ${cataPageBean.pageCount} 页|"></span>&nbsp;
+                        <span th:text="|共 ${cataPageBean.totalCount} 条记录|">
+                            </span>
+                        </span>
+                </li>
+            </ul>
+        </div>-->
+        <form action="/admin/123" enctype="multipart/form-data">
+        <div class="root-panel clearfix">
+            <div class="container-left">
+                <div>
+                    <ul id="CataZTree" class="ztree"></ul>
+                </div>
+            </div>
+            <div class="contianer-middle" hidden>
+                <div class="base-prop-panel panel clearfix">
+                    <div class="base-prop-title">
+                        <div class="yjh-title">
+                            <span class="">商品基本属性：</span>
+                        </div>
+                    </div>
+                    <div class="base-prop-content content">
+                        <!--<div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span >商品名称：</span>
+                            </div>
+                            <div class="prop-value-text">
+                                <input type="text" class="input-prop" style="width:inherit">
+                            </div>
+                        </div>-->
+                        <!--<div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span>商品描述：</span>
+                            </div>
+                            <div class="prop-value-text sale-prop-value clearfix">
+                                <textarea name="description" class="textarea-description"></textarea>
+                            </div>
+                        </div>
+                        <div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span >品牌：</span>
+                            </div>
+                            <div class="prop-value-text">
+                                <select name="brand" style="width:inherit">
+                                    <option>test1</option>
+                                    <option selected>test2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span >商品码：</span>
+                            </div>
+                            <div class="prop-value-text">
+                                <input type="productCode" style="width:inherit">
+                            </div>
+                        </div>
+                        <div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span >袖长：</span>
+                            </div>
+                            <div class="prop-value-text">
+                                <select name="袖长" style="width:inherit">
+                                    <option>test1</option>
+                                    <option selected>test2</option>
+                                </select>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+                <!-- 销售属性 -->
+                <div class="sale-prop-panel panel clearfix" >
+                    <div class="sale-prop-title">
+                        <span class="yjh-title">商品规格：</span>
+                    </div>
+                    <div class="sale-prop-content">
+                        <!--<div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span >颜色：</span>
+                            </div>
+                            <div class="prop-value-text sale-prop-value clearfix">
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>红色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>红色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>红色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>咖啡色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>咖啡色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>咖啡色</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span >尺寸：</span>
+                            </div>
+                            <div class="prop-value-text sale-prop-value clearfix">
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>红色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>红色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>红色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>咖啡色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>咖啡色</label>
+                                </div>
+                                <div class="sale-prop-cell">
+                                    <input name="color" class="cell" type="checkbox"><label>咖啡色</label>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+                <!-- 其他属性 -->
+                <div class="other-prop-panel panel clearfix" >
+                    <div class="base-prop-title">
+                        <span class="yjh-title">商品其他属性：</span>
+                    </div>
+                    <div class="other-prop-content">
+                        <div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span>商品描述：</span>
+                            </div>
+                            <div class="prop-value-text sale-prop-value clearfix">
+                                <textarea name="description" class="textarea-description"></textarea>
+                            </div>
+                        </div>
+                        <div class="prop-cell clearfix">
+                            <div class="prop-name-text text">
+                                <span>商品图片：</span>
+                            </div>
+                            <div class="prop-value-text sale-prop-value clearfix">
+                                <input type="file" name="pictures" multiple class="productPicture">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-right panel clearfix" hidden>
+                <!--<button class="skuCreate" value="确定">确定</button>-->
+            </div>
+        </div>
+            <button type="submit">确定</button>
+        </form>
+    </div>
+</div>
+<!--修改商品品类名称的弹窗-->
+<!--<div class="modal fade" id="modal-edit-kind" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+                <h4 class="modal-title" id="myModalLabel">修改品类</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="input-kind-id" value="">
+                <h4 style="display: inline">请输入要修改的新名称：</h4>
+                <input type="text" style="display: inline;width: 45%" class="form-control" id="input-kind-name">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btn-updateKind">修改</button>
+            </div>
+        </div>&lt;!&ndash; /.modal-content &ndash;&gt;
+    </div>&lt;!&ndash; /.modal &ndash;&gt;
+</div>-->
+<!--添加商品品类名称的弹窗-->
+<!--<div class="modal fade" id="modal-add-kind" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+                <h4 class="modal-title" id="myModalLabel2">添加品类</h4>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 5px;">
+                    <span>请选择上级分类：</span>
+                    <div>
+                        <ul id="CataZTree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div style="margin-bottom: 5px; margin-left:40px;">
+                    <input name="parentId" id="parentId" value="" hidden>
+                    <span>新分类名称：</span>
+                    <input type="select" class="form-control" id="input-kindName" style="display: inline;width: 45%">
+                </div>
+                <div class="radio" style="margin-bottom: 5px; margin-left:40px;" >
+                    <label>
+                        <input type="radio" name="status" id="status_off" value="0" checked> 禁用
+                    </label>
+
+                    <label>
+                        <input type="radio" name="status" id="status_on" value="1"> 启用
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="btn-addKind">添加</button>
+            </div>
+        </div>&lt;!&ndash; /.modal-content &ndash;&gt;
+    </div>&lt;!&ndash; /.modal &ndash;&gt;
+</div>
+<div class="modal fade" id="alertModal">
+    <div class="modal-dialog" style="margin-top:350px;width: 400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+                <h4 class="modal-title" id="myModalLabel3">提示</h4>
+            </div>
+            <div class="modal-body alert-text" style="text-align: center;font-size: 18px;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="btn-dismiss" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="btn-operate" data-dismiss="modal">确定</button>
+            </div>
+        </div>&lt;!&ndash; /.modal-content &ndash;&gt;
+    </div>&lt;!&ndash; /.modal &ndash;&gt;
+</div>-->
+</body>
+</html>

@@ -1,0 +1,44 @@
+#attributes .attributes-list li {
+    display: inline;
+    float: left;
+    width: 220px;
+    height: 18px;
+    overflow: hidden;
+    margin: 10px 15px 0 0;
+    line-height: 18px;
+    vertical-align: top;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #666;
+}
+.attributes{
+    width:1280px;
+    font-family:tahoma,arial,\5FAE\8F6F\96C5\9ED1,sans-serif;
+
+}
+#attributes .attributes-list ul {
+    padding: 0 20px 18px;
+    text-indent: 0;
+    border-top: 1px solid #fff;
+
+}
+li{
+    padding: 0;
+    list-style: none;
+    text-align: -webkit-match-parent;
+    font:12px/1.5 tahoma,arial,"\5b8b\4f53";
+}
+li, ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}

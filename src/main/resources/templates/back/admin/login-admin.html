@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>login-user</title>
+    <link rel="stylesheet" href="/css/pintuer.css">
+    <script src="/js/sys/jquery.js"></script>
+    <script src="/js/sys/pintuer.js"></script>
+    <script src="/js/sys/respond.js"></script>
+</head>
+<body>
+<style type="text/css">
+    .passcode {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 32px;
+        margin: 1px;
+        border-left: solid 1px #ddd;
+        text-align: center;
+        line-height: 32px;
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+<div align="center">
+    <form action="/admin/loginHandler" method="post">
+        <div class="panel padding" style="width: 450px;text-align: left;">
+            <div class="text-center">
+                <br>
+                <h2><strong>欢迎登录&nbsp;智能商城</strong></h2></div>
+            <div class="" style="padding:30px;">
+                <div class="form-group">
+                    <div class="field field-icon-right">
+                        <span class="icon icon-user"></span>
+                        <input type="text" class="input" name="userName" placeholder="登录账号"
+                               data-validate="required:请填写账号,length#>=1:账号长度不符合要求"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field field-icon-right">
+                        <input type="password" class="input" name="password" placeholder="登录密码"
+                               data-validate="required:请填写密码,length#>=1:密码长度不符合要求"/>
+                        <span class="icon icon-key"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="field">
+                        <button class="button button-block bg-main text-big">立即登录</button>
+                    </div>
+                </div>
+                <div th:if="${session.adminLoginMsg != null}" class="alert alert-green bounce">
+                    <span class="close rotate-hover"></span><strong th:text="${session.adminLoginMsg}"></strong>
+                </div>
+                <div class="text-right text-small text-gray padding-top"><a class="text-gray" target="_blank"
+                                                                            href="http://www.pintuer.com">智能商城</a> 版权所有
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,231 @@
+div,dl, dt, dd, ul, ol, li,dl, dt, dd, ul, ol, li, h4{
+  margin: 0;
+    padding: 0;
+}
+div{
+  display:block;
+}
+.bd{
+font: 12px/1.5 Tahoma,Helvetica,Arial,'\5b8b\4f53',sans-serif;
+  color: #404040;
+}
+.info-box table {
+    table-layout: fixed;
+    width: 910px;
+}
+table{
+      font-size: inherit;
+      border-collapse: collapse;
+      border-spacing: 0;
+      display: table;
+    border-color: grey;
+}
+colgroup {
+    display: table-column-group;
+}
+col[Attributes Style] {
+    width: 280px;
+}
+col {
+    display: table-column;
+}
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+.order-info .misc-info td, .order-info .contact-info td, .order-info .dealer-info td {
+    padding: 5px 10px;
+}
+.order-info .sep-row td {
+    clear: both;
+}
+.order-info .sep-row td {
+    border-bottom: 1px solid #ddd;
+}
+.info-box td, .info-box th {
+    line-height: 1.5;
+    padding: 2px 10px;
+    word-wrap: break-word;
+}
+td, th {
+    display: table-cell;
+    vertical-align: inherit;
+}
+caption, th {
+    text-align: left;
+}
+address, caption, cite, code, dfn, em, strong, th, var {
+    font-style: normal;
+    font-weight: normal;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+}
+h4 {
+    display: block;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+.order-info .misc-info td, .order-info .contact-info td, .order-info .dealer-info td {
+    padding: 5px 10px;
+}
+.order-info .misc-info .label-t {
+    display: block;
+    float: left;
+    width: 90px;
+    text-align: right;
+    margin-right: 10px;
+}
+.order-info .sep-row td {
+    clear: both;
+}
+.order-info .sep-row td {
+    border-bottom: 1px solid #ddd;
+}
+.order-info .order th, .order-info .order td {
+    padding: 8px 10px;
+    line-height: 130%;
+    text-align: center;
+    overflow: hidden;
+}
+.order .sep-row td {
+    padding: 5px 0!important;
+    border-bottom: 1px solid #B4D5FF;
+}
+.order-hd {
+    color: #404040;
+    background: #e8f2ff;
+}
+.order-info .order .item {
+    border-left: 1px solid #ddd;
+}
+.order-info .order-hd th {
+    border-bottom: 1px solid #ddd;
+}
+.order-info .order-hd th.post-fee {
+    border-right: 1px solid #ddd;
+}
+.order-info .order-hd td, .order-info .order-item td {
+    border-color: #ddd!important;
+}
+.order-info .order-item td {
+    vertical-align: middle;
+    height: 100%;
+}
+.order-info .order .order-item .order-price, .order-info .order-item td {
+    border-right: 1px solid #eee;
+}
+.order .order-item td {
+    border-bottom: 1px solid #eee;
+}
+.order-item .item .pic-info {
+    float: left;
+    margin-right: 5px;
+}
+.order-item .pic-info .pic {
+    overflow: hidden;
+    border: none;
+}
+.s50, .s50 a {
+    width: 50px;
+    height: 50px;
+}
+.s50, .s50 a {
+    width: 50px;
+    height: 50px;
+}
+.pic a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.info-box a {
+    color: #36c;
+    text-decoration: none;
+}
+.info-box a:-webkit-any-link {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.info-box a:hover {
+    color: #f60;
+    text-decoration: underline;
+}
+.pic a img {
+    vertical-align: middle;
+}
+.s50 img {
+    max-width: 50px;
+    max-height: 50px;
+}
+fieldset, img {
+    border: none;
+}
+.pic a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.order-item .item .txt-info {
+    text-align: left;
+    line-height: 18px;
+    margin-left: 55px;
+}
+.order-info .txt-info {
+    color: #808080;
+}
+.order-info .txt-info .desc {
+    color: #404040;
+}
+.order-info .order-item .sku {
+    color: #808080;
+}
+.order-info .order-item .sku span {
+    display: block;
+}
+.order-info .order .order-item .order-price, .order-info .order-item td {
+    border-right: 1px solid #eee;
+}
+.order .order-item .order-price {
+    border-left: 1px solid #eee;
+    border-right: 1px solid #B4D5FF;
+}
+.order-info .order-item td.post-fee {
+    border-right: 1px solid #ddd;
+    line-height: 22px;
+    vertical-align: middle;
+}
+.order-info td.post-fee {
+    padding: 8px 0;
+}
+.order-info .order-ft td {
+    border: none;
+    border-top: 1px solid #ccc;
+}
+.order-info .order-ft .point-info {
+    text-align: left;
+    color: #808080;
+}
+.order-info .order-ft .get-money, .order-info .order-ft .trade-money {
+    text-align: right;
+    float: right;
+    display: inline;
+    clear: both;
+    line-height: 23px;
+}
+.order-info .order-ft .get-money strong {
+    font-size: 16px;
+    font-weight: bold;
+    color: #f50;
+    padding-right: 5px;
+}
